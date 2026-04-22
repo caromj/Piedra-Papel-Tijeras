@@ -1,0 +1,57 @@
+La identificación del proyecto (Definición y Requerimientos) Piedra, Papel y Tijeras
+La definición: Piedra, papel o tijeras es un juego de manos que involucra tres elementos: piedra, que vence a la tijera rompiéndola;
+tijera, que vence al papel cortándolo; y papel, que vence a la piedra envolviéndola. 
+Este juego se utiliza a menudo para tomar decisiones o determinar quién comienza en otros juegos. 
+Las reglas son simples y se basa en un ciclo cerrado donde cada elemento puede vencer a otro.
+
+
+PÁGINA PRINCIPAL
+
+Los requerimientos que necesitamos son los siguientes:
+Necesitaremos que el usuario al introducir a la página del juego, inserte el  id= identificado del nombre de usuario para poder indentificar al jugador de la partida, 
+de lo contrario no podra participar en la sala del juego. Tras indroduccir el nombre de usuario y verificar que no haya nadie con el mismo nombre, entraras en una sala en la que te pondrá en cola o directamente 
+con otro usuario que este libre para poder jugar.
+En la página principal saldrá la definición del juego y las instrucciones para poder conocer el funcionamiento del juego.
+
+Esto será lo que se mostrará a continuación:
+Instrucciones del Juego Piedra, Papel o Tijeras.
+Piedra, papel o tijeras (también conocido por otros nombres y órdenes de palabras) es un juego de manos intransitivo, generalmente jugado entre dos personas,
+en el que cada jugador forma simultáneamente una de tres formas con la mano extendida. Estas formas son 'piedra' (puño cerrado), 'papel' (mano plana)
+y 'tijeras' (puño con el dedo índice y medio extendidos formando una V). Este juego está diseñado para jugar dos usuarios a la vez. En la que cada jugador
+elige una de las opciones con la que cree que va a ganar al otro oponente. Los dos oponentes cuentas con un máximo de tiempo de 7 segundos para poder elegir su elección. Una vez trascurrido ese tiempo se mostrara el resultado, 
+si uno de los  oponentes no ha seleccionado se seleccionara como ronda nula, a la tercera ronda nula el usuario inactivo volvera a la pantalla principa. 
+
+Opciones cuando un usuario esta inactivo en una sala 
+1 usuario inactivo, vuelve al incio 
+2 usuario activo, vuelve a inicio o se queda en la sala para ser emparejado de nuevo con el siguiente que haya en cola 
+
+cuando termina el contado de 7 segundos de saca el resultado y se comparas para deciedir exactamente quien ha sido el ganador de la ronda 
+El juego termina cuando uno de los dos se va de la sala 
+
+
+
+
+
+
+Reglas del Juego Piedra, Papel o Tijeras.
+Piedra, Papel o Tijeras es un juego simple pero cautivador. Las reglas son sencillas:
+
+Si eliges Piedra, ganas contra Tijeras pero pierdes contra Papel.
+Si eliges Tijeras, ganas contra Papel pero pierdes contra Piedra.
+Si eliges Papel, ganas contra Piedra pero pierdes contra Tijeras.
+El juego normalmente continúa por varias rondas hasta que un jugador logra suficientes victorias. 
+En este caso el juego tendrá un límite de 3 rondas de victoria.
+
+---------------------------------
+REQUERIMIENTOS  DEL CLIENTE
+---------------------------------
+
+-  Una pagina para insertar tu nombre y entrar en cola
+- Entras en la cola y serás emparejado con la primera persona que escriba su nombre y entre en cola
+- Una vez emparejados entras a la pantalla principal del juego donde ambos jugadores tienen 3 opciones a elegir
+  hacen su eleccion, pulsan jugar, se compara el resultado, y se dictamina al ganador de una forma sutil, arriba de la interfaz en un marcador.
+- El marcador ira contando las rondas y las victorias de los jugadores.
+- Una vez un jugador abandone la sala se abrira un ALERT para notificarte de que estas apunto de abandonar la sala y en esa misma ventana te notifica
+  de las victorias y derrotas que llevas (marcador).
+- Cuando el jugador 1 o 2 abandona la sala, el otro jugador automaticamente es devuelto a la pagina principal para volver a entrar en cola si asi lo desea.
+
