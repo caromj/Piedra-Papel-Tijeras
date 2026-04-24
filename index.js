@@ -9,7 +9,7 @@ import { availableParallelism } from 'node:os';
 import cluster from 'node:cluster';
 import { createAdapter, setupPrimary } from '@socket.io/cluster-adapter';
 
-if (cluster.isPrimary) {
+if (cluster.isPrimary) { //esto hace crear una variable  del entorno port 3000,3001,3003....
   const numCPUs = availableParallelism();
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork({
