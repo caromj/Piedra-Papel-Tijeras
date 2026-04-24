@@ -21,38 +21,29 @@
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="/socket.io/socket.io.js"></script> 
-    <script>
-      let counter = 0; // genera un contenedor unico por mensaje
-  
-      const socket = io({ // crea conexion con el servidor socket.io
-        ackTimeout: 10000, // tiempo máx de espera con el servidor
-        retries: 3, 
-        auth: {
-          serverOffset: 0 //se usa para saber hasta que mensaje se ha procesado ( útil para evitar duplicados)
-        }
-      });
-  
-      const form = document.getElementById('form');
-      const input = document.getElementById('input');
-      const messages = document.getElementById('messages');
-  
-      form.addEventListener('submit', (e) => { //escucha cuando el usuario envia el form
-        e.preventDefault(); // evita que el formulario recarge la página
-        if (input.value) {  // solo actua si hay texto
-          const clientOffset = `${socket.id}-${counter++}`;  // crea un idenficador único para el mensaje 
-          socket.emit('chat message', input.value, clientOffset); //el texto del mensaje //clientOffset para que el servidor lo reconozca
-          input.value = ''; //limpia el campo de texto
-        }
-      });
-  
-      socket.on('chat message', (msg, serverOffset) => {  // escucha el chat mensaje que envia el servidor
-        const item = document.createElement('li'); // crea un elemento de la lista
-        item.textContent = msg; //pone el texto del mensaje dentro de la lista 
-        messages.appendChild(item); // añade el mensaje a la lista del chat
-        window.scrollTo(0, document.body.scrollHeight); // baja hasta el final para ver mensaje
-        socket.auth.serverOffset = serverOffset;
-      });
-    </script>
+   <script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  const form = document.getElementById('form');
+  const input = document.getElementById('input');
+  const messages = document.getElementById('messages');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (input.value) {
+      socket.emit('chat message', input.value);
+      input.value = '';
+    }
+  });
+
+  socket.on('chat message', (msg) => {
+    const item = document.createElement('li');
+    item.textContent = msg;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+</script>
+
   </body>
 </html>
