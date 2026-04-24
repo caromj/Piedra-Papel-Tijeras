@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+#botones button {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+#messages {
+  list-style-type: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+#messages > li {
+  padding: 0.5rem 1rem;
+}
+
+#messages > li:nth-child(odd) {
+  background: #efefef;
+}
