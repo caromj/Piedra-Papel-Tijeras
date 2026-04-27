@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => { // cada vez que alguien se conecta le da un socket (id) único 
   console.log("Jugador conectado:", socket.id);
 
-  // Ejemplo de que el elije el jugador
+
   socket.on('jugada', (eleccion) => { //el cliente envia un mensaje, el servidor lo recibe y lo reenvia a todos los clientes conectados
     io.emit('mensaje', `Jugador ${socket.id} ha elegido ${eleccion}`); //envia el mensaje a todos los mensajes conectados
   }); 

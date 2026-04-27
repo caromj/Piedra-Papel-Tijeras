@@ -7,7 +7,7 @@ function addMessage(text) {
   const li = document.createElement('li');  //guardo el mensaje en la li
   li.textContent = text; //el contenido de esa li lo convierto en texto
   messages.appendChild(li); // añade elemento al final de la lista y mantiene el orden 
-  window.scrollTo(0, document.body.scrollHeight); // esto baja automaticamente abarro de la linea vas siempre al ultimo mensaje
+  window.scrollTo(0, document.body.scrollHeight); // esto baja automáticamente abajo de la linea del último mensaje
 }
 
 document.getElementById('Piedra').addEventListener('click', () => {
