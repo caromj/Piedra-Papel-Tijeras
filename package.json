@@ -12,9 +12,11 @@
   "type": "module",
   "dependencies": {
     "@socket.io/cluster-adapter": "^0.3.0",
+    "dotenv": "^17.4.2",
     "express": "^4.22.1",
     "socket.io": "^4.8.3",
     "sqlite": "^5.1.1",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^6.0.1",
+    "ws": "^8.20.0"
   }
 }

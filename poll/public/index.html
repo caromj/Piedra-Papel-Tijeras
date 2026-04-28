@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Piedra Papel Tijera Polling</title>
+
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Piedra, Papel y Tijeras</h1>
+        <div id="inicio">
+            <button class="btn-jugar" onclick="empezar()">BUSCAR PARTIDA</button>
+        </div>
+        <div id="juego" style="display:none">
+            <p>Tu ID: <span id="mi-id" ></span></p>
+            <hr>
+            <div id="info">Buscando rival...</div>
+            <div id="controles" style="display:none">
+                <button class="btn-arma" onclick="jugar('piedra')"> Piedra</button>
+                <button class="btn-arma" onclick="jugar('papel')"> Papel</button>
+                <button class="btn-arma" onclick="jugar('tijera')"> Tijera</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
