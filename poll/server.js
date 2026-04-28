@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-let COLA_ESPERA = null; // creamos un cajon vacion, y se guardara el id de la persona que llega al juego
+let COLA_ESPERA = null; // creamos un cajón vacio, y se guardara el id de la persona que llega al juego
 const PARTIDAS = {}; // un diccionaro donde se guarda las partidas activas
 
 // 1. Unirse a la fila
@@ -67,7 +67,9 @@ app.post('/enviar-jugada', (req, res) => {
     }
 });
 
-app.listen(process.env.PUERTO, () => console.log("Servidor en http://localhost:"+process.env.PUERTO));
+app.listen(process.env.POLL_PUERTO_HTTP, () => console.log("Servidor en http://localhost:"+process.env.POLL_PUERTO_HTTP));
+
+
 
 
 
