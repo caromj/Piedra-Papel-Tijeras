@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Piedra, Papel o Tijeras</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Piedra, Papel o Tijeras</h1>
+
+  <button onclick="enviarEleccion('piedra')"> Piedra</button>
+  <button onclick="enviarEleccion('papel')"> Papel</button>
+  <button onclick="enviarEleccion('tijeras')"> Tijeras</button>
+
+  <h2 id="estado">Conectando...</h2>
+
+  <!-- Resultado visible para ambos jugadores -->
+  <div id="resultado" style="margin-top:20px; font-size:22px; font-weight:bold;"></div>
+
+  <script src="game.js"> </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Piedra Papel Tijera SSE</title>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Piedra, Papel y Tijeras</h1>
+
+        <div id="inicio">
+            <button onclick="empezar()">BUSCAR PARTIDA</button>
+        </div>
+
+        <div id="juego" style="display:none">
+            <p>Tu ID: <span id="mi-id"></span></p>
+            <hr>
+            <div id="info">Buscando rival...</div>
+
+            <div id="controles" style="display:none">
+                <button onclick="jugar('piedra')">Piedra</button>
+                <button onclick="jugar('papel')">Papel</button>
+                <button onclick="jugar('tijera')">Tijera</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
+
+
