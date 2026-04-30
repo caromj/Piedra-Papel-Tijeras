@@ -3,14 +3,14 @@ let MI_SALA = null;
 let INTERVALO = null;
 const intervaloPoll = 1;
 
-async function empezar() {
-    const res = await fetch('/entrar');
+async function empezar() { // llama al servidor para entrar en el juego
+    const res = await fetch('/entrar'); //recibe id jugador, id sala y estado
     const datos = await res.json();
     
-    MI_IDENTIFICADOR = datos.idJugador;
+    MI_IDENTIFICADOR = datos.idJugador; //guarda tu id y la sala (si ya tienes rival )
     MI_SALA = datos.idSala;
 
-    document.getElementById('mi-id').innerText = MI_IDENTIFICADOR;
+    document.getElementById('mi-id').innerText = MI_IDENTIFICADOR; // muestra tu id 
     document.getElementById('inicio').style.display = 'none';
     document.getElementById('juego').style.display = 'block';
 
@@ -18,12 +18,12 @@ async function empezar() {
     INTERVALO = setInterval(actualizarEstado, intervaloPoll);
 }
 
-async function actualizarEstado() {
+async function actualizarEstado() { //  pregunta al servidor por el estado
     const res = await fetch(`/ver-estado/${MI_IDENTIFICADOR}`);
     const datos = await res.json();
 
-    // CLAVE: Si el servidor dice que ya tenemos sala, la guardamos
-    if (datos.idSala) {
+   
+    if (datos.idSala) {  //  Si el servidor dice que ya tenemos sala, la guardamos
         MI_SALA = datos.idSala;
     }
 
@@ -34,22 +34,22 @@ async function actualizarEstado() {
             document.getElementById('controles').style.display = 'block';
         } else {
             document.getElementById('controles').style.display = 'none';
-            document.getElementById('info').innerText = "Esperando al rival...";
+            document.getElementById('info').innerText = "Esperando al rival..."; // si ya jugaste oculta botones 
         }
     }
 
     if (datos.estado === "FINALIZADO") {
-        clearInterval(INTERVALO); // polling importante hace que finalice
+        clearInterval(INTERVALO); //si la partida termino para el polling y muestra resultado 
         mostrarResultado(datos.elecciones, datos.jugadores);
     }
 }
 
-async function jugar(opcion) {
-    // Desaparecer botones al instante
+async function jugar(opcion) { 
+    // Desaparecer botones al instante y muestra mensaje
     document.getElementById('controles').style.display = 'none';
     document.getElementById('info').innerText = "Enviando jugada...";
 
-    await fetch('/enviar-jugada', {
+    await fetch('/enviar-jugada', { // envia tu jugada al servidor
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ 
@@ -61,9 +61,9 @@ async function jugar(opcion) {
 }
 
 function mostrarResultado(elecciones, jugadores) {
-    const rivalID = jugadores.find(id => id !== MI_IDENTIFICADOR);
+    const rivalID = jugadores.find(id => id !== MI_IDENTIFICADOR); // encuentra el id del rival 
     const miMovimiento = elecciones[MI_IDENTIFICADOR];
-    const rivalMovimiento = elecciones[rivalID];
+    const rivalMovimiento = elecciones[rivalID]; // saca tu jugada y del rival 
 
     let texto = `Tú: ${miMovimiento} vs Rival: ${rivalMovimiento}<br>`;
 
