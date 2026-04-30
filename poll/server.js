@@ -35,8 +35,9 @@ app.get('/entrar', (req, res) => {
 });
 
 // 2. Ver estado (Polling)
-app.get('/ver-estado/:idJugador', (req, res) => { // extrael el idjugador dela url
+app.get('/ver-estado/:idJugador', (req, res) => { // extrael el idjugador de la url
     const { idJugador } = req.params;
+    console.log('Me ha preguntado por el estado el jugador ' + idJugador);
 
     // Buscamos en qué sala está metido este jugador
     const idSala = Object.keys(PARTIDAS).find(id => PARTIDAS[id].jugadores.includes(idJugador)); // recorre todas las claves de partidas 

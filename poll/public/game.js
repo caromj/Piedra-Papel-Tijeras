@@ -1,7 +1,7 @@
 let MI_IDENTIFICADOR = null;
 let MI_SALA = null;
 let INTERVALO = null;
-const intervaloPoll = 1;
+const intervaloPoll = 5001;
 
 async function empezar() { // llama al servidor para entrar en el juego
     const res = await fetch('/entrar'); //recibe id jugador, id sala y estado
@@ -22,20 +22,16 @@ async function actualizarEstado() { //  pregunta al servidor por el estado
     const res = await fetch(`/ver-estado/${MI_IDENTIFICADOR}`);
     const datos = await res.json();
 
-   
     if (datos.idSala) {  //  Si el servidor dice que ya tenemos sala, la guardamos
         MI_SALA = datos.idSala;
     }
 
     if (datos.estado === "JUGANDO") {
         document.getElementById('info').innerText = "¡Rival encontrado! Elige:";
-        // Solo mostramos controles si no hemos jugado aún
-        if (!datos.elecciones[MI_IDENTIFICADOR]) {
-            document.getElementById('controles').style.display = 'block';
-        } else {
-            document.getElementById('controles').style.display = 'none';
-            document.getElementById('info').innerText = "Esperando al rival..."; // si ya jugaste oculta botones 
-        }
+        
+        // SIEMPRE mostrar controles (ya no se ocultan)
+        document.getElementById('controles').style.display = 'block';
+        document.getElementById('info').innerText = "¡Rival encontrado! Elige cuando quieras";
     }
 
     if (datos.estado === "FINALIZADO") {
@@ -45,9 +41,8 @@ async function actualizarEstado() { //  pregunta al servidor por el estado
 }
 
 async function jugar(opcion) { 
-    // Desaparecer botones al instante y muestra mensaje
-    document.getElementById('controles').style.display = 'none';
-    document.getElementById('info').innerText = "Enviando jugada...";
+    // Ya no ocultamos botones ni mostramos "esperando"
+    // Solo enviamos la jugada
 
     await fetch('/enviar-jugada', { // envia tu jugada al servidor
         method: 'POST',
@@ -58,9 +53,15 @@ async function jugar(opcion) {
             jugada: opcion 
         })
     });
+
+    document.getElementById('info').innerText = "Jugada enviada";
 }
 
 function mostrarResultado(elecciones, jugadores) {
+
+    // OCULTAR BOTONES AL MOSTRAR RESULTADO
+    document.getElementById('controles').style.display = 'none';
+
     const rivalID = jugadores.find(id => id !== MI_IDENTIFICADOR); // encuentra el id del rival 
     const miMovimiento = elecciones[MI_IDENTIFICADOR];
     const rivalMovimiento = elecciones[rivalID]; // saca tu jugada y del rival 
@@ -79,5 +80,7 @@ function mostrarResultado(elecciones, jugadores) {
         texto += " PERDISTE";
     }
 
-    document.getElementById('info').innerHTML = `<h2>${texto}</h2><button onclick="location.reload()">Reiniciar</button>`;
+    document.getElementById('info').innerHTML =
+        `<h2>${texto}</h2><button onclick="location.reload()">Reiniciar</button>`;
 }
+

@@ -48,7 +48,8 @@ app.get('/entrar', (req, res) => {
         const idSala = `SALA-${COLA_ESPERA}-${idJugador}`;
         PARTIDAS[idSala] = {
             jugadores: [COLA_ESPERA, idJugador],
-            elecciones: {}
+            elecciones: {},
+            estado: "JUGANDO" // <<< AMBOS EMPIEZAN EN JUGANDO
         };
 
         const rival = COLA_ESPERA;
@@ -56,12 +57,16 @@ app.get('/entrar', (req, res) => {
 
         res.json({ idJugador, idSala, estado: "LISTO" });
 
-        // Avisar por SSE a ambos jugadores
-        const estado1 = verEstado(idJugador);
-        const estado2 = verEstado(rival);
+        // <<< ENVIAR JUGANDO A AMBOS JUGADORES INMEDIATAMENTE
+        const estadoInicial = {
+            estado: "JUGANDO",
+            idSala,
+            elecciones: {},
+            jugadores: [rival, idJugador]
+        };
 
-        enviarEvento(idJugador, "estado", estado1);
-        enviarEvento(rival, "estado", estado2);
+        enviarEvento(idJugador, "estado", estadoInicial);
+        enviarEvento(rival, "estado", estadoInicial);
 
     } else {
         COLA_ESPERA = idJugador;
@@ -78,10 +83,9 @@ function verEstado(idJugador) {
     }
 
     const partida = PARTIDAS[idSala];
-    const jugadasRealizadas = Object.keys(partida.elecciones).length;
 
     return {
-        estado: jugadasRealizadas === 2 ? "FINALIZADO" : "JUGANDO",
+        estado: partida.estado, // <<< YA NO SE CALCULA AQUÍ
         idSala,
         elecciones: partida.elecciones,
         jugadores: partida.jugadores
@@ -96,12 +100,33 @@ app.post('/enviar-jugada', (req, res) => {
         PARTIDAS[idSala].elecciones[idJugador] = jugada;
         res.json({ ok: true });
 
-        const estado1 = verEstado(idJugador); // calculamos el estado del jugador, buscamos rival y calculamos el estado dle rival 
-        const rival = estado1.jugadores.find(j => j !== idJugador);
-        const estado2 = verEstado(rival);
+        const partida = PARTIDAS[idSala];
 
-        enviarEvento(idJugador, "estado", estado1); // enviamos el estado acutalizado a ambos jugadores
-        enviarEvento(rival, "estado", estado2);
+        // Si ambos jugaron → FINALIZADO
+        if (Object.keys(partida.elecciones).length === 2) {
+            partida.estado = "FINALIZADO";
+
+            // Enviar resultado a ambos
+            partida.jugadores.forEach(j => {
+                enviarEvento(j, "estado", verEstado(j));
+            });
+
+            // Reiniciar para siguiente ronda
+            setTimeout(() => {
+                partida.elecciones = {};
+                partida.estado = "JUGANDO";
+
+                partida.jugadores.forEach(j => {
+                    enviarEvento(j, "estado", verEstado(j));
+                });
+            }, 2000);
+
+        } else {
+            // Solo actualizar estado normal
+            partida.jugadores.forEach(j => {
+                enviarEvento(j, "estado", verEstado(j));
+            });
+        }
 
     } else {
         res.status(404).json({ ok: false, error: "Sala no encontrada" });
@@ -111,6 +136,7 @@ app.post('/enviar-jugada', (req, res) => {
 app.listen(process.env.SSE_PUERTO_HTTP, () =>
     console.log("Servidor SSE en http://localhost:" + process.env.SSE_PUERTO_HTTP)
 );
+
 
 
 

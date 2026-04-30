@@ -25,24 +25,27 @@ function actualizarEstado(datos) {
     if (datos.idSala) MI_SALA = datos.idSala; // si el servidor te asigna sala la guardamos 
 
     if (datos.estado === "JUGANDO") { // si hay rival muestra botones 
-        document.getElementById('info').innerText = "¡Rival encontrado! Elige:"; 
-        if (!datos.elecciones[MI_IDENTIFICADOR]) { 
-            document.getElementById('controles').style.display = 'block';
-        } else {
-            document.getElementById('controles').style.display = 'none';
-            document.getElementById('info').innerText = "Esperando al rival...";
+
+        // SI YA HE JUGADO → NO CAMBIAR EL TEXTO
+        if (!datos.elecciones[MI_IDENTIFICADOR]) {
+            document.getElementById('info').innerText = "¡Rival encontrado! Elige cuando quieras"; 
         }
+
+        // SIEMPRE mostrar botones mientras la partida está activa
+        document.getElementById('controles').style.display = 'block';
     }
 
-    if (datos.estado === "FINALIZADO") { // si la partia termono cierras la conexion sse y muestras resultado 
+    if (datos.estado === "FINALIZADO") { // si la partida terminó cierras la conexion sse y muestras resultado 
         fuente.close();
         mostrarResultado(datos.elecciones, datos.jugadores);
     }
 }
 
+
+
+
 async function jugar(opcion) { // envias tu jugada al servidor 
-    document.getElementById('controles').style.display = 'none';
-    document.getElementById('info').innerText = "Enviando jugada...";
+    document.getElementById('info').innerText = "Jugada enviada"; // ya no ocultamos botones
 
     await fetch('/enviar-jugada', {
         method: 'POST',
@@ -56,6 +59,10 @@ async function jugar(opcion) { // envias tu jugada al servidor
 }
 
 function mostrarResultado(elecciones, jugadores) {
+
+    // OCULTAR BOTONES AL MOSTRAR RESULTADO
+    document.getElementById('controles').style.display = 'none';
+
     const rivalID = jugadores.find(id => id !== MI_IDENTIFICADOR);
     const miMovimiento = elecciones[MI_IDENTIFICADOR];
     const rivalMovimiento = elecciones[rivalID];
@@ -73,6 +80,8 @@ function mostrarResultado(elecciones, jugadores) {
     document.getElementById('info').innerHTML =
         `<h2>${texto}</h2><button onclick="location.reload()">Reiniciar</button>`;
 }
+
+
 
 
 
