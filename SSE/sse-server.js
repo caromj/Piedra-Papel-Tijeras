@@ -13,12 +13,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let COLA_ESPERA = null;
 const PARTIDAS = {};
-const CONEXIONES = {}; // idJugador → res SSE
+const CONEXIONES = {}; 
 
 // 1. Unirse a la fila
 app.get('/entrar', (req, res) => {
     const idJugador = "JUGADOR-" + Math.floor(Math.random() * 10000);
 
+    // Si ya hay alguien esperando → emparejar
     if (COLA_ESPERA && COLA_ESPERA !== idJugador) {
         const idSala = `SALA-${COLA_ESPERA}-${idJugador}`;
 
@@ -27,18 +28,22 @@ app.get('/entrar', (req, res) => {
             elecciones: {}
         };
 
-        // Avisar a ambos por SSE
-        enviarEvento(COLA_ESPERA, "rival-encontrado", { idSala });
-        enviarEvento(idJugador, "rival-encontrado", { idSala });
+        // Esperar un poco para que ambos clientes abran el SSE
+        setTimeout(() => {
+            enviarEvento(COLA_ESPERA, "rival-encontrado", { idSala });
+            enviarEvento(idJugador, "rival-encontrado", { idSala });
+        }, 200);
 
         COLA_ESPERA = null;
 
-        res.json({ idJugador, idSala, estado: "LISTO" });
-    } else {
-        COLA_ESPERA = idJugador;
-        res.json({ idJugador, idSala: null, estado: "ESPERANDO" });
+        return res.json({ idJugador, idSala, estado: "LISTO" });
     }
+
+    // SI NO HAY NADIE ESPERANDO → este jugador entra en la cola
+    COLA_ESPERA = idJugador;
+    res.json({ idJugador, idSala: null, estado: "ESPERANDO" });
 });
+
 
 // 2. Canal SSE
 app.get('/eventos', (req, res) => {
@@ -72,7 +77,7 @@ app.post('/enviar-jugada', (req, res) => {
     const rival = jugadores.find(j => j !== idJugador);
     enviarEvento(rival, "rival-jugo", {});
 
-    // Si ambos jugaron → finalizado
+    // Si ambos jugaron  dar resultado
     if (Object.keys(partida.elecciones).length === 2) {
         enviarEvento(jugadores[0], "finalizado", partida);
         enviarEvento(jugadores[1], "finalizado", partida);
@@ -90,9 +95,14 @@ function enviarEvento(idJugador, tipo, data) {
     conn.write(`data: ${JSON.stringify(data)}\n\n`);
 }
 
-app.listen(process.env.POLL_PUERTO_HTTP, () =>
-    console.log("Servidor SSE en http://localhost:" + process.env.SSE_PUERTO_HTTP)
-);
+const PORT = process.env.SSE_PUERTO_HTTP || 3002;
+
+app.listen(PORT, () => {
+    console.log("Servidor SSE en http://localhost:" + PORT);
+});
+
+
+
 
 
 

@@ -3,6 +3,38 @@ let MI_SALA = null;
 let fuenteEventos = null;
 
 async function empezar() {
+    // 1. Abrir SSE primero
+    iniciarSSE();
+
+    // 2. Luego entrar en la cola
+    const res = await fetch('/entrar');
+    const datos = await res.json();
+
+    MI_IDENTIFICADOR = datos.idJugador;
+    MI_SALA = datos.idSala;
+
+    document.getElementById('mi-id').innerText = MI_IDENTIFICADOR;
+    document.getElementById('inicio').style.display = 'none';
+    document.getElementById('juego').style.display = 'block';
+}
+
+function iniciarSSE() {
+    // OJO: aquí aún no sabemos MI_IDENTIFICADOR, así que usamos un query vacío
+    // y luego reasignamos cuando lo tengamos
+    const tempId = Math.random().toString(36).slice(2);
+    fuenteEventos = new EventSource(`/eventos?idJugador=${tempId}`);
+
+    // Cuando llegue /entrar, el servidor usará otro idJugador,
+    // así que mejor hacemos esto: cerramos y reabrimos con el ID real
+    fuenteEventos.onopen = () => {
+        // Nada especial aquí
+    };
+
+    // Reasignaremos el EventSource después de /entrar si hace falta
+}
+
+// Mejor: reabrir SSE con el ID real después de /entrar
+async function empezar() {
     const res = await fetch('/entrar');
     const datos = await res.json();
 
@@ -13,10 +45,7 @@ async function empezar() {
     document.getElementById('inicio').style.display = 'none';
     document.getElementById('juego').style.display = 'block';
 
-    iniciarSSE();
-}
-
-function iniciarSSE() {
+    // Abrimos SSE con el ID REAL
     fuenteEventos = new EventSource(`/eventos?idJugador=${MI_IDENTIFICADOR}`);
 
     fuenteEventos.addEventListener("rival-encontrado", e => {
@@ -27,7 +56,7 @@ function iniciarSSE() {
         document.getElementById('controles').style.display = 'block';
     });
 
-    fuenteEventos.addEventListener("rival-jugo", e => {
+    fuenteEventos.addEventListener("rival-jugo", () => {
         document.getElementById('info').innerText = "El rival ya jugó...";
     });
 
